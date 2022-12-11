@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,3 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::apiResources([
+    'users' => \App\Http\Controllers\Api\V1\UserController::class,
+]);
