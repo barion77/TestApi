@@ -21,7 +21,7 @@ class Freekassa
     /**
      * @param $method - метод API
      * @param $data - тело запросв
-     * @return bool|string $response
+     * @return array $response
      */
     public function request($method, $data = [])
     {
@@ -31,7 +31,7 @@ class Freekassa
         $sign = hash_hmac('sha256', implode('|', $data), self::API_KEY);
         $data['signature'] = $sign;
 
-        $request = json_decode($data);
+        $request = json_encode($data);
 
         curl_setopt($this->handler, CURLOPT_URL, $url);
         curl_setopt($this->handler, CURLOPT_HEADER, 0);
@@ -45,6 +45,6 @@ class Freekassa
 
         $response = json_decode($result, true);
 
-        return $result;
+        return $response;
     }
 }
