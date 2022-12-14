@@ -1,6 +1,6 @@
 ﻿<?php
 
-namespace App\Classes;
+namespace App\Classes\Api\Freekassa;
 
 class Freekassa
 {
@@ -23,13 +23,11 @@ class Freekassa
      * @param $data - тело запросв
      * @return array $response
      */
-    public function request($method, $data = [])
+    protected function request($method, $data = [])
     {
         $url = self::URL . $method;
 
-        $data = ksort($data);
-        $sign = hash_hmac('sha256', implode('|', $data), self::API_KEY);
-        $data['signature'] = $sign;
+        $data = $this->prepareData($data);
 
         $request = json_encode($data);
 
@@ -41,10 +39,22 @@ class Freekassa
         curl_setopt($this->handler, CURLOPT_POSTFIELDS, $request);
 
         $result = curl_exec($this->handler);
-        curl_close($this->handler);
 
         $response = json_decode($result, true);
 
         return $response;
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    protected function prepareData($data = [])
+    {
+        ksort($data);
+        $sign = hash_hmac('sha256', implode('|', $data), self::API_KEY);
+        $data['signature'] = $sign;
+
+        return $data;
     }
 }
